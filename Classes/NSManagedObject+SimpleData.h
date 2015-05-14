@@ -20,6 +20,7 @@ typedef void(^SimpleDataFindOrCreateFlagedProcessBlock)(id object, id objectNode
 + (id)create;
 + (id)findOrCreate:(id)objectId forKey:(NSString *)key;
 + (NSArray *)findOrCreateMultiple:(NSArray *)newObjects byKey:(NSString *)key dbKey:(NSString *)dbKey process:(SimpleDataFindOrCreateProcessBlock)processBlock;
++ (NSArray *)findOrCreateMultipleFlaged:(NSArray *)newObjects byKey:(NSString *)key dbKey:(NSString *)dbKey process:(SimpleDataFindOrCreateFlagedProcessBlock)processBlock;
 
 + (void)deleteObject:(id)obj;
 + (void)deleteObjects:(NSArray *)array;

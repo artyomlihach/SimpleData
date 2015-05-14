@@ -88,7 +88,7 @@
     return results;
 }
 
-+ (NSArray *)findOrCreateMultiple:(NSArray *)newObjects byKey:(NSString *)key dbKey:(NSString *)dbKey process:(SimpleDataFindOrCreateFlagedProcessBlock)processBlock
++ (NSArray *)findOrCreateMultipleFlaged:(NSArray *)newObjects byKey:(NSString *)key dbKey:(NSString *)dbKey process:(SimpleDataFindOrCreateFlagedProcessBlock)processBlock
 {
     if (newObjects.count == 0)
     {
