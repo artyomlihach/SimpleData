@@ -13,6 +13,7 @@
 typedef NSManagedObject*(^SimpleDataMergeArrayBlock)(id node);
 typedef NSManagedObject*(^SimpleDataDictionaryBlock)(id key, id value);
 typedef void(^SimpleDataFindOrCreateProcessBlock)(id object, id objectNode, NSInteger objectIndex);
+typedef void(^SimpleDataFindOrCreateFlagedProcessBlock)(id object, id objectNode, NSInteger objectIndex, BOOL didCreate);
 
 @interface NSManagedObject (SimpleData)
 

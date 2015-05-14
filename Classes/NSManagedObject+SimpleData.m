@@ -88,6 +88,51 @@
     return results;
 }
 
++ (NSArray *)findOrCreateMultiple:(NSArray *)newObjects byKey:(NSString *)key dbKey:(NSString *)dbKey process:(SimpleDataFindOrCreateFlagedProcessBlock)processBlock
+{
+    if (newObjects.count == 0)
+    {
+        return nil;
+    }
+    
+    NSArray *sortedNewObjects = [newObjects sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        return [[obj1 valueForKey:key] compare:[obj2 valueForKey:key]];
+    }];
+    NSArray *newObjectsIds = [sortedNewObjects bk_map:^id(id obj) {
+        return [obj valueForKey:key];
+    }];
+    
+    NSFetchRequest *request = [self fetchRequestFromCurrentClass];
+    request.predicate = [NSPredicate predicateWithFormat:[NSString stringWithFormat:@"%@ IN %%@", dbKey], newObjectsIds];
+    request.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:dbKey ascending:YES]];
+    
+    NSArray *results = [[[SimpleDataModel sharedDataModel] contextForCurrentThread] executeFetchRequest:request error:nil];
+
+    NSInteger resultsIndex = 0;
+    for (NSInteger objectIndex = 0; objectIndex < sortedNewObjects.count; objectIndex++)
+    {
+        id objectNode = sortedNewObjects[objectIndex];
+        if  (resultsIndex < results.count && [[objectNode valueForKey:key] compare:[results[resultsIndex] valueForKey:dbKey]] == NSOrderedSame)
+        {
+            if (processBlock)
+            {
+                processBlock(results[resultsIndex++], objectNode, objectIndex, NO);
+            }
+        }
+        else
+        {
+            NSManagedObject *object = [self create];
+            [object setValue:[objectNode valueForKey:key] forKey:dbKey];
+            if (processBlock)
+            {
+                processBlock(object, objectNode, objectIndex, YES);
+            }
+        }
+    }
+    
+    return results;
+}
+
 #pragma mark - Deleting entities
 
 + (void)deleteObject:(id)obj
