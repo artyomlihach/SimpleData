@@ -10,4 +10,5 @@ Pod::Spec.new do |s|
   s.source_files          = 'Classes','Classes/**/*.{h,m}'
   s.framework             = 'Foundation','UIKit'
   s.requires_arc          = true
+  s.dependency 		  'BlocksKit'
 end
